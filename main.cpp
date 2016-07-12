@@ -109,9 +109,9 @@ void operator delete[](void* p) THROW_SPEC_0
 
 //Note iterators are invalidated if we start removing elements from it
 
-typedef eastl::vector_map<int, char> VMAP;
+typedef eastl::vector_map<std::string, char> VMAP;
 
-typedef std::map<int, char> STLMAP;
+typedef std::map<std::string, char> STLMAP;
 
 
 void vecMap_lookUp_EA()
@@ -123,7 +123,7 @@ void vecMap_lookUp_EA()
     //fill vector map
     for(int i = 0; i < 10; i++)
     {
-        v_map->insert(eastl::pair<int,char>(i*int(rand()*5),'a'+i));
+        v_map->insert(eastl::pair<std::string,char>("a%d"+i,'a'+i));
     }
 
     //print out vector map elements (key value)
@@ -134,7 +134,7 @@ void vecMap_lookUp_EA()
 
     //VECTOR MAP look up for the:  key=8
     VMAP::iterator  ea_it;
-    ea_it = v_map->find(296758767);
+    ea_it = v_map->find("0");
     if (ea_it != v_map->end())
     {
         std::cout<<(*ea_it).first<<"-->"<<(*ea_it).second<<std::endl;
@@ -153,7 +153,7 @@ void vecMap_lookUp_STL()
     //fill STL map
     for(int i = 0; i < 10; i++)
     {
-        stl_map->insert(std::pair<int,char>(i*int(rand()*5),'a'+i) );
+        stl_map->insert(std::pair<std::string,char>("a%d"+i,'a'+i) );
     }
 
     //print out STL map elements (key value)
@@ -164,7 +164,7 @@ void vecMap_lookUp_STL()
 
     //STL MAP look up for the:  key=8
     STLMAP::iterator  stlIter;
-    stlIter = stl_map->find(296758767);
+    stlIter = stl_map->find("0");
     if (stlIter != stl_map->end())
     {
         std::cout<<(*stlIter).first<<"-->"<<(*stlIter).second<<std::endl;
@@ -183,7 +183,7 @@ int main()
     double sumTimeEA=0;
 
 
-    for(int i=0;i<100;i++)
+//    for(int i=0;i<100;i++)
     {
         auto begin = std::chrono::high_resolution_clock::now();
         vecMap_lookUp_EA();
@@ -202,7 +202,7 @@ int main()
     int counterSTL=0;
     double sumTimeSTL=0;
 
-    for(int i=0;i<100;i++)
+//    for(int i=0;i<100;i++)
     {
         auto begin = std::chrono::high_resolution_clock::now();
         vecMap_lookUp_STL();
