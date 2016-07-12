@@ -123,7 +123,9 @@ void vecMap_lookUp_EA()
     //fill vector map
     for(int i = 0; i < 10; i++)
     {
-        v_map->insert(eastl::pair<std::string,char>("a%d"+i,'a'+i));
+        std::string tmpString="a";
+        tmpString+= std::to_string(i);
+        v_map->insert(eastl::pair<std::string,char>(tmpString,'a'+i));
     }
 
     //print out vector map elements (key value)
@@ -134,7 +136,7 @@ void vecMap_lookUp_EA()
 
     //VECTOR MAP look up for the:  key=8
     VMAP::iterator  ea_it;
-    ea_it = v_map->find("0");
+    ea_it = v_map->find("a1");
     if (ea_it != v_map->end())
     {
         std::cout<<(*ea_it).first<<"-->"<<(*ea_it).second<<std::endl;
@@ -153,7 +155,9 @@ void vecMap_lookUp_STL()
     //fill STL map
     for(int i = 0; i < 10; i++)
     {
-        stl_map->insert(std::pair<std::string,char>("a%d"+i,'a'+i) );
+        std::string tmpString="a";
+        tmpString+= std::to_string(i);
+        stl_map->insert(std::pair<std::string,char>(tmpString,'a'+i) );
     }
 
     //print out STL map elements (key value)
@@ -164,7 +168,7 @@ void vecMap_lookUp_STL()
 
     //STL MAP look up for the:  key=8
     STLMAP::iterator  stlIter;
-    stlIter = stl_map->find("0");
+    stlIter = stl_map->find("a1");
     if (stlIter != stl_map->end())
     {
         std::cout<<(*stlIter).first<<"-->"<<(*stlIter).second<<std::endl;
@@ -183,7 +187,7 @@ int main()
     double sumTimeEA=0;
 
 
-//    for(int i=0;i<100;i++)
+    for(int i=0;i<100;i++)
     {
         auto begin = std::chrono::high_resolution_clock::now();
         vecMap_lookUp_EA();
@@ -202,7 +206,7 @@ int main()
     int counterSTL=0;
     double sumTimeSTL=0;
 
-//    for(int i=0;i<100;i++)
+    for(int i=0;i<100;i++)
     {
         auto begin = std::chrono::high_resolution_clock::now();
         vecMap_lookUp_STL();
