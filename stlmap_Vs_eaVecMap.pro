@@ -11,5 +11,3 @@ qtcAddDeployment()
 CONFIG+=c++11
 
 unix|win32: LIBS += -L/usr/local/lib -lEASTL -lstdc++
-
-

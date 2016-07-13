@@ -5,6 +5,8 @@
 #include <EASTL/vector_map.h>
 #include <EASTL/scoped_ptr.h>
 
+#include <EASTL/fixed_vector.h>
+
 
 
 
@@ -177,56 +179,134 @@ void vecMap_lookUp_STL()
 }
 
 
+
+
+void eaCall()
+{
+    // Misc testing
+    typedef eastl::fixed_vector<eastl::pair<int, float>, 8> FV;
+    typedef eastl::vector_map<int, float, eastl::less<int>, FV::allocator_type, FV> FixedVectorMap;
+
+    FixedVectorMap fvm;
+
+
+    for(int i = FV::kMaxSize - 1; i >= 0; i--)
+        fvm.insert(eastl::pair<int, float>(i, (float)i));
+
+
+    //print out the vector_map
+    for(FixedVectorMap::iterator iter = fvm.begin(); iter != fvm.end(); iter++)
+        std::cout<<(*iter).first<<"-->"<<(*iter).second<<std::endl;
+
+
+    FixedVectorMap::iterator it;
+    auto begin = std::chrono::high_resolution_clock::now();
+        for (int t=0;t<100000;t++)
+        {
+            it = fvm.find(3);
+        }
+    auto end = std::chrono::high_resolution_clock::now();
+    auto result=std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count();
+    std::cout << "EA found: \'" << (*it).first << "\' key in ";
+    std::cout << "result: " << result << " ns" << std::endl;
+}
+
+
+void stlCall()
+{
+    //traditional STL map lookup
+    //EA vector map lookup
+    std::shared_ptr<std::map<int, float> > stl_map (new std::map<int, float>);
+
+    //fill STL map
+    for(int i = 0; i < 8; i++)
+    {
+        std::string tmpString="a";
+        tmpString+= std::to_string(i);
+        stl_map->insert(std::pair<int, float>(i,i) );
+    }
+
+    //print out STL map elements (key value)
+    for(const auto &i: *stl_map)
+    {
+        std::cout<<i.first<<"-->"<<i.second<<std::endl;
+    }
+
+    //STL MAP look up for the:  key=8
+    std::map<int, float>::iterator  stlIter;
+
+    auto begin = std::chrono::high_resolution_clock::now();
+        for (int t=0;t<100000;t++)
+        {
+            stlIter = stl_map->find(3);
+        }
+    auto end = std::chrono::high_resolution_clock::now();
+    int result=std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count();
+
+    if (stlIter != stl_map->end())
+    {
+        std::cout << "STL found: \'" << (*stlIter).first << "\' key in ";
+        std::cout << "result: " << result << " ns" << std::endl;
+    }
+}
+
+
 int main()
 {
-    auto begin = std::chrono::high_resolution_clock::now();
-    auto end = std::chrono::high_resolution_clock::now();
+//    auto begin = std::chrono::high_resolution_clock::now();
+//    auto end = std::chrono::high_resolution_clock::now();
 
-    double averageEA=0;
-    int counterEA=0;
-    double sumTimeEA=0;
-
-
-    for(int i=0;i<100;i++)
-    {
-        auto begin = std::chrono::high_resolution_clock::now();
-        vecMap_lookUp_EA();
-        counterEA++;
-        auto end = std::chrono::high_resolution_clock::now();
-        sumTimeEA+=std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count();
-    }
-    averageEA=sumTimeEA/counterEA;
+//    double averageEA=0;
+//    int counterEA=0;
+//    double sumTimeEA=0;
 
 
-
-
-
-    //initialize variables
-    double averageSTL=0;
-    int counterSTL=0;
-    double sumTimeSTL=0;
-
-    for(int i=0;i<100;i++)
-    {
-        auto begin = std::chrono::high_resolution_clock::now();
-        vecMap_lookUp_STL();
-        counterSTL++;
-        auto end = std::chrono::high_resolution_clock::now();
-        sumTimeSTL+=std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count();
-    }
-    averageSTL=sumTimeSTL/counterSTL;
+//    for(int i=0;i<1000;i++)
+//    {
+//        auto begin = std::chrono::high_resolution_clock::now();
+//        vecMap_lookUp_EA();
+//        counterEA++;
+//        auto end = std::chrono::high_resolution_clock::now();
+//        sumTimeEA+=std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count();
+//    }
+//    averageEA=sumTimeEA/counterEA;
 
 
 
 
-    std::cout << "average time EAMAP with counterEA " << counterEA << " iterations: "<< averageEA << "ns" << std::endl;
-    std::cout << "average time STLMAP with counterSTL " << counterSTL << " iterations: "<< averageSTL << "ns" << std::endl;
+
+//    //initialize variables
+//    double averageSTL=0;
+//    int counterSTL=0;
+//    double sumTimeSTL=0;
+
+//    for(int i=0;i<1000;i++)
+//    {
+//        auto begin = std::chrono::high_resolution_clock::now();
+//        vecMap_lookUp_STL();
+//        counterSTL++;
+//        auto end = std::chrono::high_resolution_clock::now();
+//        sumTimeSTL+=std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count();
+//    }
+//    averageSTL=sumTimeSTL/counterSTL;
 
 
-//    end = std::chrono::high_resolution_clock::now();
-//    std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count() << "ns" << std::endl;
+//    std::cout << "average time EAMAP with counterEA " << counterEA << " iterations: "<< averageEA << "ns" << std::endl;
+//    std::cout << "average time STLMAP with counterSTL " << counterSTL << " iterations: "<< averageSTL << "ns" << std::endl;
 
 
+
+
+
+
+
+    eaCall();
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+
+    stlCall();
 
 
 
